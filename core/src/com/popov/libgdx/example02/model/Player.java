@@ -9,12 +9,19 @@ import com.popov.libgdx.example02.Game;
 public class Player extends GameObject {
 
     private static int WIDTH = 64;
+    private static int SPEED = 300;
+    private enum Movement {
+        None,
+        Left,
+        Right
+    }
 
     private Frame normalFrame = new Frame(new Texture("player.png"), WIDTH);
     private Frame rightFrame = new Frame(new Texture("player_right.png"), WIDTH);
     private Frame leftFrame = new Frame(new Texture("player_left.png"), WIDTH);
 
     private Vector3 touchPos = new Vector3();
+    private Movement movement = Movement.None;
 
     public Player(Game game) {
         super(game);
@@ -26,16 +33,16 @@ public class Player extends GameObject {
     @Override
     public void handle(){
         super.handle();
+
+        updateMovement();
         prepareFrame();
-        if (Gdx.input.isTouched()) {
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            Game.camera.unproject(touchPos);
-            rectangle.x = Math.round(touchPos.x - frame.getWidth() / 2f);
-        }  else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            rectangle.x -= 200 * Gdx.graphics.getDeltaTime();
-        }  else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            rectangle.x += 200 * Gdx.graphics.getDeltaTime();
+
+        int deltaX = 0;
+        switch (movement) {
+            case Left: deltaX -= SPEED; break;
+            case Right: deltaX += SPEED; break;
         }
+        rectangle.x += deltaX * Gdx.graphics.getDeltaTime();
         if (rectangle.x < 0) {
             rectangle.x = 0;
         } else if (rectangle.x > 800 - frame.getWidth()) {
@@ -45,12 +52,30 @@ public class Player extends GameObject {
 
     @Override
     public void prepareFrame() {
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            frame = rightFrame;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            frame = leftFrame;
+        switch (movement) {
+            case None: frame = normalFrame; break;
+            case Left: frame = leftFrame; break;
+            case Right: frame = rightFrame; break;
+        }
+    }
+
+    private void updateMovement() {
+        if (Gdx.input.isTouched()) {
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            Game.camera.unproject(touchPos);
+            if (touchPos.x < rectangle.x) {
+                movement = Movement.Left;
+            } else if (touchPos.x > rectangle.x + frame.getWidth()) {
+                movement = Movement.Right;
+            } else {
+                movement = Movement.None;
+            }
+        }  else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && !Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            movement = Movement.Left;
+        }  else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && !Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            movement = Movement.Right;
         } else {
-            frame = normalFrame;
+            movement = Movement.None;
         }
     }
 }
