@@ -1,27 +1,24 @@
 package com.popov.libgdx.example02.model;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Frame {
-    private float width, height;
-    private Texture texture;
+    private TextureRegion textureRegion;
+    protected Sprite sprite;
 
-    public Frame(Texture texture, float width) {
-        this.texture = texture;
-        this.width = width;
-        height = texture.getHeight() * width / texture.getWidth();
+    public Frame(TextureRegion textureRegion, float width, float height) {
+        this.textureRegion = textureRegion;
+        sprite = new Sprite(textureRegion);
+        sprite.setSize(width, height);
     }
 
-    public float getWidth() {
-        return width;
+    public static Frame ByWidth(TextureRegion textureRegion, float width) {
+        return new Frame(textureRegion, width, width / textureRegion.getRegionWidth() * textureRegion.getRegionHeight());
     }
 
-    public float getHeight() {
-        return height;
+    public Sprite getSprite() {
+        return sprite;
     }
-
-    public Texture getTexture() {
-        return texture;
-    }
-
 }

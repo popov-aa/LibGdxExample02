@@ -1,0 +1,53 @@
+
+default.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+drop
+  rotate: false
+  xy: 2, 2
+  size: 1970, 2000
+  orig: 1970, 2000
+  offset: 0, 0
+  index: -1
+
+default2.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+background
+  rotate: false
+  xy: 2, 2
+  size: 2000, 1327
+  orig: 2000, 1327
+  offset: 0, 0
+  index: -1
+
+default3.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+player
+  rotate: false
+  xy: 2, 2
+  size: 400, 1200
+  orig: 400, 1200
+  offset: 0, 0
+  index: -1
+player_left
+  rotate: false
+  xy: 404, 2
+  size: 400, 1200
+  orig: 400, 1200
+  offset: 0, 0
+  index: -1
+player_right
+  rotate: false
+  xy: 806, 2
+  size: 400, 1200
+  orig: 400, 1200
+  offset: 0, 0
+  index: -1

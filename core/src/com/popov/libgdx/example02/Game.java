@@ -6,8 +6,8 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -15,11 +15,16 @@ import com.popov.libgdx.example02.model.Drop;
 import com.popov.libgdx.example02.model.Frame;
 import com.popov.libgdx.example02.model.GameObject;
 import com.popov.libgdx.example02.model.Player;
+import com.popov.libgdx.example02.utils.Assets;
 
 public class Game extends ApplicationAdapter {
-	public static OrthographicCamera camera;
-	SpriteBatch batch;
 
+	private Assets assets;
+	private TextureAtlas textureAtlas;
+	private OrthographicCamera camera;
+	private SpriteBatch batch;
+
+	private Frame background;
 	public Player player;
 
 	public Sound dropSound;
@@ -30,6 +35,10 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void create () {
+		assets = new Assets();
+		textureAtlas = assets.getAssetManager().get(Assets.DEFAULT_TEXTURE_ATLAS, TextureAtlas.class);
+		background = Frame.ByWidth(textureAtlas.findRegion("background"), 800);
+
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 		
@@ -54,6 +63,7 @@ public class Game extends ApplicationAdapter {
 		batch.setProjectionMatrix(camera.combined);
 
 		batch.begin();
+		batch.draw(background.getSprite(), 0, 0, 800, 480);
 		drawGameObject(player);
 		for (Drop drop: drops) {
 			drawGameObject(drop);
@@ -73,6 +83,7 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		super.dispose();
+		assets.dispose();
 		batch.dispose();
 		dropSound.dispose();
 		music.dispose();
@@ -81,7 +92,7 @@ public class Game extends ApplicationAdapter {
 	private void drawGameObject(GameObject gameObject) {
 		Rectangle rectangle = gameObject.getRectangle();
 		batch.draw(
-				gameObject.getFrame().getTexture(),
+				gameObject.getFrame().getSprite(),
 				rectangle.getX(),
 				rectangle.getY(),
 				rectangle.getWidth(),
@@ -92,5 +103,13 @@ public class Game extends ApplicationAdapter {
 		Drop drop = new Drop(this);
 		drops.add(drop);
 		lastDropTime = TimeUtils.nanoTime();
+	}
+
+	public TextureAtlas getTextureAtlas() {
+		return textureAtlas;
+	}
+
+	public OrthographicCamera getCamera() {
+		return camera;
 	}
 }

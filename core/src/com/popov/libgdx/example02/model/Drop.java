@@ -1,7 +1,6 @@
 package com.popov.libgdx.example02.model;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.popov.libgdx.example02.Game;
 
@@ -9,8 +8,8 @@ public class Drop extends GameObject {
 
     public Drop(Game game) {
         super(game);
-        frame = new Frame(new Texture("drop.png"), 32);
-        rectangle.x = MathUtils.random(0, 800 - frame.getWidth());
+        frame = Frame.ByWidth(game.getTextureAtlas().findRegion("drop"), 64);
+        rectangle.x = MathUtils.random(0, 800 - frame.getSprite().getWidth());
         rectangle.y = 480;
     }
 
@@ -18,7 +17,7 @@ public class Drop extends GameObject {
     public void handle() {
         super.handle();
         rectangle.y -= 200 * Gdx.graphics.getDeltaTime();
-        if (rectangle.y + frame.getHeight() < 0) {
+        if (rectangle.y + frame.getSprite().getHeight() < 0) {
             game.drops.removeValue(this, true);
         }
         if (rectangle.overlaps(game.player.getRectangle())) {

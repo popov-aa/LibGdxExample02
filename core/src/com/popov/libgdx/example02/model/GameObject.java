@@ -4,8 +4,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.popov.libgdx.example02.Game;
 
 public abstract class GameObject {
-    protected Game game;
     protected Rectangle rectangle = new Rectangle();
+    protected Game game;
     protected Frame frame;
 
     public GameObject(Game game) {
@@ -14,8 +14,8 @@ public abstract class GameObject {
 
     public void handle() {
         prepareFrame();
-        rectangle.width = frame.getWidth();
-        rectangle.height = frame.getHeight();
+        rectangle.width = frame.getSprite().getWidth();
+        rectangle.height = frame.getSprite().getHeight();
     }
 
     public Rectangle getRectangle() {
